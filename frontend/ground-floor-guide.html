@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FET Ground Floor Guide</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; padding: 0 15px; }
+    h2 { margin-bottom: 5px; }
+    #searchBox { padding: 10px; width: 100%; font-size: 16px; margin: 15px 0; box-sizing: border-box; }
+    .columns { display: flex; gap: 20px; flex-wrap: wrap; }
+    .column { flex: 1; min-width: 280px; }
+    .column h3 { background: #2563eb; color: white; padding: 8px 12px; border-radius: 6px; }
+    .stop { padding: 10px; border-bottom: 1px solid #eee; }
+    .stop .name { font-weight: bold; }
+    .stop .distance { color: #2563eb; font-size: 14px; }
+    .stop .note { font-size: 13px; color: #555; margin-top: 4px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h2>FET Ground Floor — Find Your Way</h2>
+  <p style="color:#666; font-size:14px;">All directions are measured from the main entrance.</p>
+
+  <input type="text" id="searchBox" placeholder="Search (e.g. washroom, café, lift)..." oninput="filterStops()">
+
+  <div class="columns">
+    <div class="column" id="leftColumn">
+      <h3>← Left Side</h3>
+    </div>
+    <div class="column" id="rightColumn">
+      <h3>Right Side →</h3>
+    </div>
+  </div>
+
+  <script>
+    const leftSide = [
+      { name: "Admin Office", distance: "2 m", note: "" },
+      { name: "Seminar Hall (Room 002)", distance: "10 m", note: "" },
+      { name: "Lift", distance: "50–60 m", note: "" },
+      { name: "Washroom (Men)", distance: "50–60 m, then upstairs", note: "Take the stairs to 1st floor — washroom is on the left-hand side" },
+      { name: "Washroom (Women)", distance: "50–60 m, then upstairs", note: "Take the side stairs to 1st floor — washroom is on the right-hand side" },
+    ];
+
+    const rightSide = [
+      { name: "Board Room", distance: "5 m", note: "" },
+      { name: "Examination Department", distance: "10 m", note: "" },
+      { name: "Physics & Chemistry Labs", distance: "20–25 m", note: "" },
+      { name: "Kota's Café", distance: "40–50 m", note: "" },
+      { name: "Washroom (Women)", distance: "40–50 m, then upstairs", note: "Take the right-side stairs to 1st floor" },
+      { name: "Washroom (Men)", distance: "40–50 m, then upstairs", note: "Take the left-side stairs to 1st floor" },
+    ];
+
+    function renderColumn(containerId, stops) {
+      const container = document.getElementById(containerId);
+      stops.forEach(stop => {
+        const div = document.createElement("div");
+        div.className = "stop";
+        div.dataset.search = stop.name.toLowerCase();
+        div.innerHTML = `
+          <div class="name">${stop.name}</div>
+          <div class="distance">${stop.distance}</div>
+          ${stop.note ? `<div class="note">${stop.note}</div>` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function filterStops() {
+      const query = document.getElementById("searchBox").value.toLowerCase();
+      document.querySelectorAll(".stop").forEach(el => {
+        el.classList.toggle("hidden", !el.dataset.search.includes(query));
+      });
+    }
+
+    renderColumn("leftColumn", leftSide);
+    renderColumn("rightColumn", rightSide);
+  </script>
+</body>
+</html>

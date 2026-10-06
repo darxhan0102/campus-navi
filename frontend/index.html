@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Campus Navigator</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; }
+    select, button { padding: 8px; margin: 5px 0; width: 100%; font-size: 16px; }
+    #result { margin: 15px 0; padding: 15px; background: #f0f0f0; border-radius: 8px; }
+    #map { height: 500px; border-radius: 8px; }
+    #coordLog { margin-top: 10px; padding: 10px; background: #1e293b; color: #93c5fd;
+                font-family: monospace; font-size: 13px; border-radius: 8px;
+                white-space: pre-wrap; max-height: 150px; overflow-y: auto; }
+    #clearBtn { background: #ef4444; color: white; border: none; cursor: pointer; }
+    .floorLink { display: inline-block; margin: 10px 0; padding: 10px 15px; background: #2563eb;
+                 color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h2>Campus Navigator</h2>
+
+  <a class="floorLink" href="ground-floor-guide.html">Inside FET — Ground Floor Guide →</a>
+
+  <label>From:</label>
+  <select id="fromSelect"></select>
+
+  <label>To:</label>
+  <select id="toSelect"></select>
+
+  <button onclick="findRoute()">Find Route</button>
+
+  <div id="result"></div>
+
+  <div id="map"></div>
+
+  <p style="font-size:13px; color:#666;">Click on the map to record a point (for placing nodes / tracing roads).</p>
+  <button id="clearBtn" onclick="clearPoints()">Clear Picked Points</button>
+  <div id="coordLog">Click on the map to record a point...</div>
+
+  <script>
+    const API = "http://127.0.0.1:5000";
+
+    const CAMPUS_CENTER = [12.641610, 77.440524];
+    const map = L.map('map').setView(CAMPUS_CENTER, 17);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const nodeCoords = {
+      N1: { lat: 12.641368, lng: 77.437051 }, // Entrance Gate
+      N2: { lat: 12.642195, lng: 77.439664 }, // Parking
+      N3: { lat: 12.641043, lng: 77.440581 }, // Hostel 1 (Himalaya)
+      N4: { lat: 12.641143, lng: 77.440833 }, // Canteen
+      N5: { lat: 12.640886, lng: 77.441193 }, // Hostel 3 (Karakoram)
+      N6: { lat: 12.641143, lng: 77.441198 }, // Hostel 2 (Purvanchal)
+      N7: { lat: 12.642085, lng: 77.439889 }, // FET
+      N8: { lat: 12.638568, lng: 77.440361 }, // Core Block
+      N9: { lat: 12.639112, lng: 77.440050 }  // Aerospace Block
+    };
+
+    const edgeWaypoints = {
+      "N1-N2": [
+        [12.641368, 77.437051], [12.641234, 77.437287], [12.641747, 77.437513],
+        [12.642061, 77.437539], [12.642213, 77.437700], [12.642281, 77.438575],
+        [12.642281, 77.439202], [12.642218, 77.439594], [12.642195, 77.439664]
+      ],
+      "N2-N7": [
+        [12.642195, 77.439664], [12.642179, 77.439707], [12.642164, 77.439814], [12.642085, 77.439889]
+      ],
+      "N2-N3": [
+        [12.642195, 77.439664], [12.642108, 77.439803], [12.641967, 77.439771],
+        [12.641736, 77.439814], [12.641412, 77.440211], [12.641286, 77.440592],
+        [12.641270, 77.440586], [12.641043, 77.440581]
+      ],
+      "N2-N4": [
+        [12.642195, 77.439664], [12.642108, 77.439803], [12.641967, 77.439771],
+        [12.641736, 77.439814], [12.641412, 77.440211], [12.641286, 77.440592],
+        [12.641264, 77.440763], [12.641143, 77.440833]
+      ],
+      "N7-N3": [
+        [12.642085, 77.439889], [12.642108, 77.439803], [12.641967, 77.439771],
+        [12.641736, 77.439814], [12.641412, 77.440211], [12.641286, 77.440592],
+        [12.641270, 77.440586], [12.641043, 77.440581]
+      ],
+      "N7-N4": [
+        [12.642085, 77.439889], [12.642108, 77.439803], [12.641967, 77.439771],
+        [12.641736, 77.439814], [12.641412, 77.440211], [12.641286, 77.440592],
+        [12.641264, 77.440763], [12.641143, 77.440833]
+      ],
+      "N1-N9": [
+        [12.641368, 77.437051], [12.641235, 77.437293], [12.640701, 77.438205],
+        [12.640272, 77.439165], [12.639921, 77.439680], [12.639330, 77.440248],
+        [12.639218, 77.440152], [12.639112, 77.440050]
+      ],
+      "N1-N8": [
+        [12.641368, 77.437051], [12.641280, 77.437183], [12.640725, 77.438170],
+        [12.640306, 77.439136], [12.639877, 77.439704], [12.639322, 77.440252],
+        [12.639071, 77.440659], [12.639029, 77.440734], [12.638725, 77.440520], [12.638568, 77.440361]
+      ],
+      "N1-N3": [
+        [12.641368, 77.437051], [12.641231, 77.437282], [12.641780, 77.437518],
+        [12.642026, 77.437534], [12.642210, 77.437700], [12.642267, 77.438323],
+        [12.642272, 77.439181], [12.642178, 77.439803], [12.641958, 77.439776],
+        [12.641760, 77.439814], [12.641404, 77.440232], [12.641288, 77.440597], [12.641043, 77.440581]
+      ],
+      "N1-N4": [
+        [12.641368, 77.437051], [12.641231, 77.437282], [12.641780, 77.437518],
+        [12.642026, 77.437534], [12.642210, 77.437700], [12.642267, 77.438323],
+        [12.642272, 77.439181], [12.642178, 77.439803], [12.641958, 77.439776],
+        [12.641760, 77.439814], [12.641404, 77.440232], [12.641288, 77.440597],
+        [12.641277, 77.440747], [12.641143, 77.440833]
+      ],
+      "N1-N6": [
+        [12.641368, 77.437051], [12.641231, 77.437282], [12.641780, 77.437518],
+        [12.642026, 77.437534], [12.642210, 77.437700], [12.642267, 77.438323],
+        [12.642272, 77.439181], [12.642178, 77.439803], [12.641958, 77.439776],
+        [12.641760, 77.439814], [12.641404, 77.440232], [12.641288, 77.440597],
+        [12.641277, 77.440747], [12.641266, 77.441117], [12.641143, 77.441198]
+      ],
+      "N1-N5": [
+        [12.641368, 77.437051], [12.641231, 77.437282], [12.641780, 77.437518],
+        [12.642026, 77.437534], [12.642210, 77.437700], [12.642267, 77.438323],
+        [12.642272, 77.439181], [12.642178, 77.439803], [12.641958, 77.439776],
+        [12.641760, 77.439814], [12.641404, 77.440232], [12.641288, 77.440597],
+        [12.641277, 77.440747], [12.641266, 77.441117], [12.640890, 77.441198], [12.640886, 77.441193]
+      ],
+      "N9-N8": [
+        [12.639112, 77.440050], [12.639309, 77.440243], [12.639167, 77.440425],
+        [12.639089, 77.440602], [12.638686, 77.440468], [12.638568, 77.440361]
+      ],
+      "N5-N6": [
+        [12.640886, 77.441193],
+        [12.641143, 77.441198]
+      ],
+      "N6-N4": [
+        [12.641143, 77.441198],
+        [12.641269, 77.441117],
+        [12.641269, 77.440908]
+      ],
+      "N4-N3": [
+        [12.641143, 77.440833],
+        [12.641282, 77.440597]
+      ],
+    };
+
+    let markerLayer = L.layerGroup().addTo(map);
+    let routeLine = null;
+    let pickedPoints = [];
+
+    function clearPoints() {
+      pickedPoints = [];
+      document.getElementById("coordLog").textContent = "Click on the map to record a point...";
+    }
+
+    map.on('click', (e) => {
+      const lat = e.latlng.lat.toFixed(6);
+      const lng = e.latlng.lng.toFixed(6);
+      pickedPoints.push(`[${lat}, ${lng}]`);
+      document.getElementById("coordLog").textContent = pickedPoints.join(",\n");
+    });
+
+    function getSegment(fromId, toId) {
+      const forward = edgeWaypoints[`${fromId}-${toId}`];
+      const backward = edgeWaypoints[`${toId}-${fromId}`];
+
+      if (forward) return forward;
+      if (backward) return [...backward].reverse();
+
+      const a = nodeCoords[fromId], b = nodeCoords[toId];
+      return a && b ? [[a.lat, a.lng], [b.lat, b.lng]] : [];
+    }
+
+    async function loadLocations() {
+      const res = await fetch(`${API}/locations`);
+      const nodes = await res.json();
+
+      const fromSelect = document.getElementById("fromSelect");
+      const toSelect = document.getElementById("toSelect");
+
+      nodes.forEach(node => {
+        fromSelect.add(new Option(node.name, node.id));
+        toSelect.add(new Option(node.name, node.id));
+
+        const coord = nodeCoords[node.id];
+        if (coord) {
+          L.marker([coord.lat, coord.lng]).addTo(markerLayer).bindPopup(node.name);
+        }
+      });
+    }
+
+    async function findRoute() {
+      const from = document.getElementById("fromSelect").value;
+      const to = document.getElementById("toSelect").value;
+
+      const res = await fetch(`${API}/route?from=${from}&to=${to}`);
+      const data = await res.json();
+
+      const resultDiv = document.getElementById("result");
+
+      if (data.error) {
+        resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+        return;
+      }
+
+      resultDiv.innerHTML = `
+        <p><b>Route:</b> ${data.path.join(" → ")}</p>
+        <p><b>Distance:</b> ${data.distance} meters</p>
+      `;
+
+      let fullLine = [];
+      for (let i = 0; i < data.path.length - 1; i++) {
+        fullLine = fullLine.concat(getSegment(data.path[i], data.path[i + 1]));
+      }
+
+      if (routeLine) map.removeLayer(routeLine);
+      routeLine = L.polyline(fullLine, { color: 'red', weight: 4 }).addTo(map);
+      map.fitBounds(routeLine.getBounds());
+    }
+
+    loadLocations();
+  </script>
+</body>
+</html>
