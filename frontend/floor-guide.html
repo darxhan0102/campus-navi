@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FET Floor Guide</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+      max-width: 800px; margin: 0 auto; padding: 0 20px 40px;
+      background: #f8fafc; color: #1e293b;
+    }
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;
+    }
+    .navbar h1 { font-size: 20px; margin: 0; color: #1e3a8a; }
+    .navLink {
+      background: #1e3a8a; color: white; text-decoration: none;
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      transition: background 0.15s;
+    }
+    .navLink:hover { background: #1e40af; }
+    .card {
+      background: white; border-radius: 12px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 18px;
+    }
+    .note {
+      background: #eff6ff; border-left: 4px solid #1e3a8a; padding: 12px 16px;
+      font-size: 13px; color: #334155; border-radius: 8px; line-height: 1.6;
+    }
+    #floorTabs { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    #floorTabs button {
+      flex: 1; min-width: 80px; padding: 10px; border: 1.5px solid #1e3a8a;
+      background: white; color: #1e3a8a; border-radius: 8px; cursor: pointer;
+      font-size: 14px; font-weight: 600; transition: all 0.15s;
+    }
+    #floorTabs button.active { background: #1e3a8a; color: white; }
+    #searchBox {
+      padding: 11px 14px; width: 100%; font-size: 15px; margin-top: 14px;
+      border: 1px solid #cbd5e1; border-radius: 8px;
+    }
+    .columns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .column { flex: 1; min-width: 260px; }
+    .column h3 {
+      background: #334155; color: white; padding: 9px 14px; border-radius: 8px;
+      font-size: 14px; margin-bottom: 4px;
+    }
+    .stop { padding: 11px 4px; border-bottom: 1px solid #f1f5f9; }
+    .stop .name { font-weight: 600; font-size: 14.5px; }
+    .stop .distance { color: #1e3a8a; font-size: 13px; font-weight: 500; }
+    .stop .note { font-size: 12.5px; color: #64748b; margin-top: 3px; line-height: 1.4; }
+    .hidden { display: none; }
+    .disclaimer { font-size: 12px; color: #94a3b8; margin-top: 16px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>FET Floor Guide</h1>
+    <a class="navLink" href="index.html">← Campus Map</a>
+  </div>
+
+  <div class="card">
+    <div class="note">
+      <b>Two entrances to this block:</b> Main Entrance (front) and a second entrance near Kota's Café / Himalaya Hostel side.<br>
+      <b>Washrooms:</b> Located on the mid-landing between every pair of floors (Ground–1st, 1st–2nd, 2nd–3rd, 3rd–4th), reachable via Stairs A or Stairs B. No washrooms elsewhere.
+    </div>
+    <div id="floorTabs"></div>
+    <input type="text" id="searchBox" placeholder="Search (e.g. washroom, lab, lecture hall)..." oninput="filterStops()">
+  </div>
+
+  <div class="card">
+    <div class="columns">
+      <div class="column" id="leftColumn"><h3 id="leftTitle">Stairs A Side</h3></div>
+      <div class="column" id="rightColumn"><h3 id="rightTitle">Stairs B Side</h3></div>
+    </div>
+  </div>
+
+  <p class="disclaimer">Floors 1–4 are read off older fire-escape signage — confirm room order in person and edit this file to correct anything.</p>
+
+  <script>
+    const floors = {
+      "Ground": {
+        left: [
+          { name: "Admin Office", distance: "2 m", note: "" },
+          { name: "Seminar Hall (Room 002)", distance: "10 m", note: "" },
+          { name: "Lift", distance: "50–60 m", note: "" },
+          { name: "Washroom (Men)", distance: "50–60 m, then upstairs", note: "Via Stairs A — mid-landing to 1st floor, washroom on left" },
+          { name: "Washroom (Women)", distance: "50–60 m, then upstairs", note: "Via Stairs A — mid-landing to 1st floor, washroom on right" },
+        ],
+        right: [
+          { name: "Board Room", distance: "5 m", note: "" },
+          { name: "Examination Department", distance: "10 m", note: "" },
+          { name: "Physics & Chemistry Labs", distance: "20–25 m", note: "" },
+          { name: "Kota's Café", distance: "40–50 m", note: "Second entrance to the block is here" },
+          { name: "Washroom (Women)", distance: "40–50 m, then upstairs", note: "Via Stairs B — mid-landing to 1st floor" },
+          { name: "Washroom (Men)", distance: "40–50 m, then upstairs", note: "Via Stairs B — mid-landing to 1st floor" },
+        ]
+      },
+      "First": {
+        left: [
+          { name: "Environmental Lab", distance: "Near", note: "" },
+          { name: "Computer Science Research Lab", distance: "Near-mid", note: "" },
+          { name: "VLSI CAD Lab", distance: "Mid", note: "" },
+          { name: "Lecture Halls (cluster)", distance: "Mid-far", note: "" },
+          { name: "Washroom", distance: "—", note: "Mid-landing between 1st and 2nd floor" },
+        ],
+        right: [
+          { name: "Computer Lab 1", distance: "Near", note: "" },
+          { name: "Computer Lab 2", distance: "Near-mid", note: "" },
+          { name: "Central Lecture Theatre", distance: "Mid", note: "Mirrors Ground floor auditorium below" },
+          { name: "Lecture Halls (cluster)", distance: "Mid-far", note: "" },
+          { name: "Washroom", distance: "—", note: "Mid-landing between 1st and 2nd floor" },
+        ]
+      },
+      "Second": {
+        left: [
+          { name: "Electronics Hobby Lab", distance: "Near", note: "" },
+          { name: "Electronics Advanced Microcontroller Lab", distance: "Near-mid", note: "" },
+          { name: "Electronics Project Research Lab", distance: "Mid", note: "" },
+          { name: "EEE Faculty Room", distance: "Mid-far", note: "" },
+          { name: "Electrical Lab", distance: "Far", note: "" },
+          { name: "Washroom", distance: "—", note: "Mid-landing between 2nd and 3rd floor" },
+        ],
+        right: [
+          { name: "Library", distance: "Mid", note: "Duplex — spans 2nd and 3rd floor, entry only here on 2nd" },
+          { name: "Civil CAD Lab", distance: "Near", note: "" },
+          { name: "Engineering Workshop", distance: "Near-mid", note: "" },
+          { name: "Coating Lab", distance: "Mid-far", note: "" },
+          { name: "Makers Lab", distance: "Far", note: "" },
+          { name: "Washroom", distance: "—", note: "Mid-landing between 2nd and 3rd floor" },
+        ]
+      },
+      "Third": {
+        left: [
+          { name: "Civil Faculty Room", distance: "Near", note: "" },
+          { name: "Library Store", distance: "Near-mid", note: "No entrance here — part of duplex library, enter via 2nd floor" },
+          { name: "Instrumentation Lab", distance: "Mid", note: "" },
+          { name: "Washroom", distance: "—", note: "Mid-landing between 3rd and 4th floor" },
+        ],
+        right: [
+          { name: "Valuation Room", distance: "Near", note: "" },
+          { name: "Examination Section", distance: "Near-mid", note: "" },
+          { name: "Electrical Department", distance: "Mid", note: "" },
+          { name: "Information Science HOD & Faculty Room", distance: "Mid-far", note: "" },
+          { name: "Network Database Lab", distance: "Far", note: "" },
+          { name: "Web Technology Lab", distance: "Far", note: "" },
+          { name: "Washroom", distance: "—", note: "Mid-landing between 3rd and 4th floor" },
+        ]
+      },
+      "Fourth": {
+        left: [
+          { name: "Oregano Metallic Lab", distance: "Near", note: "" },
+          { name: "CNMS Lab", distance: "Near-mid", note: "" },
+          { name: "Functional Process Surface Lab", distance: "Mid", note: "" },
+          { name: "Applied Nano Material Lab", distance: "Mid-far", note: "" },
+          { name: "Green Nano Ready Lab", distance: "Far", note: "" },
+        ],
+        right: [
+          { name: "Carbonic Chemistry Lab", distance: "Near", note: "" },
+          { name: "Sustainable Energy Materials & Process Lab", distance: "Near-mid", note: "" },
+          { name: "Organic & Inorganic Chemistry Lab", distance: "Mid", note: "" },
+          { name: "CNMS Board Room / Office", distance: "Mid-far", note: "" },
+          { name: "Nano & Eco Interfaces Lab", distance: "Far", note: "" },
+        ]
+      }
+    };
+
+    let currentFloor = "Ground";
+
+    function renderFloorTabs() {
+      const container = document.getElementById("floorTabs");
+      container.innerHTML = "";
+      Object.keys(floors).forEach(floorName => {
+        const btn = document.createElement("button");
+        btn.textContent = floorName;
+        btn.className = floorName === currentFloor ? "active" : "";
+        btn.onclick = () => { currentFloor = floorName; renderAll(); };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderColumn(containerId, stops) {
+      const container = document.getElementById(containerId);
+      const heading = container.querySelector("h3");
+      container.innerHTML = "";
+      container.appendChild(heading);
+      stops.forEach(stop => {
+        const div = document.createElement("div");
+        div.className = "stop";
+        div.dataset.search = stop.name.toLowerCase();
+        div.innerHTML = `
+          <div class="name">${stop.name}</div>
+          <div class="distance">${stop.distance}</div>
+          ${stop.note ? `<div class="note">${stop.note}</div>` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderAll() {
+      renderFloorTabs();
+      const data = floors[currentFloor];
+      renderColumn("leftColumn", data.left);
+      renderColumn("rightColumn", data.right);
+      document.getElementById("searchBox").value = "";
+    }
+
+    function filterStops() {
+      const query = document.getElementById("searchBox").value.toLowerCase();
+      document.querySelectorAll(".stop").forEach(el => {
+        el.classList.toggle("hidden", !el.dataset.search.includes(query));
+      });
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>

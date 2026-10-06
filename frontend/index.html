@@ -9,10 +9,6 @@
     select, button { padding: 8px; margin: 5px 0; width: 100%; font-size: 16px; }
     #result { margin: 15px 0; padding: 15px; background: #f0f0f0; border-radius: 8px; }
     #map { height: 500px; border-radius: 8px; }
-    #coordLog { margin-top: 10px; padding: 10px; background: #1e293b; color: #93c5fd;
-                font-family: monospace; font-size: 13px; border-radius: 8px;
-                white-space: pre-wrap; max-height: 150px; overflow-y: auto; }
-    #clearBtn { background: #ef4444; color: white; border: none; cursor: pointer; }
     .floorLink { display: inline-block; margin: 10px 0; padding: 10px 15px; background: #2563eb;
                  color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
   </style>
@@ -20,7 +16,7 @@
 <body>
   <h2>Campus Navigator</h2>
 
-  <a class="floorLink" href="ground-floor-guide.html">Inside FET — Ground Floor Guide →</a>
+  <a class="floorLink" href="floor-guide.html">Inside FET — Floor Guide →</a>
 
   <label>From:</label>
   <select id="fromSelect"></select>
@@ -34,10 +30,6 @@
 
   <div id="map"></div>
 
-  <p style="font-size:13px; color:#666;">Click on the map to record a point (for placing nodes / tracing roads).</p>
-  <button id="clearBtn" onclick="clearPoints()">Clear Picked Points</button>
-  <div id="coordLog">Click on the map to record a point...</div>
-
   <script>
     const API = "http://127.0.0.1:5000";
 
@@ -49,15 +41,15 @@
     }).addTo(map);
 
     const nodeCoords = {
-      N1: { lat: 12.641368, lng: 77.437051 }, // Entrance Gate
-      N2: { lat: 12.642195, lng: 77.439664 }, // Parking
-      N3: { lat: 12.641043, lng: 77.440581 }, // Hostel 1 (Himalaya)
-      N4: { lat: 12.641143, lng: 77.440833 }, // Canteen
-      N5: { lat: 12.640886, lng: 77.441193 }, // Hostel 3 (Karakoram)
-      N6: { lat: 12.641143, lng: 77.441198 }, // Hostel 2 (Purvanchal)
-      N7: { lat: 12.642085, lng: 77.439889 }, // FET
-      N8: { lat: 12.638568, lng: 77.440361 }, // Core Block
-      N9: { lat: 12.639112, lng: 77.440050 }  // Aerospace Block
+      N1: { lat: 12.641368, lng: 77.437051 },
+      N2: { lat: 12.642195, lng: 77.439664 },
+      N3: { lat: 12.641043, lng: 77.440581 },
+      N4: { lat: 12.641143, lng: 77.440833 },
+      N5: { lat: 12.640886, lng: 77.441193 },
+      N6: { lat: 12.641143, lng: 77.441198 },
+      N7: { lat: 12.642085, lng: 77.439889 },
+      N8: { lat: 12.638568, lng: 77.440361 },
+      N9: { lat: 12.639112, lng: 77.440050 }
     };
 
     const edgeWaypoints = {
@@ -130,36 +122,13 @@
         [12.639112, 77.440050], [12.639309, 77.440243], [12.639167, 77.440425],
         [12.639089, 77.440602], [12.638686, 77.440468], [12.638568, 77.440361]
       ],
-      "N5-N6": [
-        [12.640886, 77.441193],
-        [12.641143, 77.441198]
-      ],
-      "N6-N4": [
-        [12.641143, 77.441198],
-        [12.641269, 77.441117],
-        [12.641269, 77.440908]
-      ],
-      "N4-N3": [
-        [12.641143, 77.440833],
-        [12.641282, 77.440597]
-      ],
+      "N5-N6": [ [12.640886, 77.441193], [12.641143, 77.441198] ],
+      "N6-N4": [ [12.641143, 77.441198], [12.641269, 77.441117], [12.641269, 77.440908] ],
+      "N4-N3": [ [12.641143, 77.440833], [12.641282, 77.440597] ],
     };
 
     let markerLayer = L.layerGroup().addTo(map);
     let routeLine = null;
-    let pickedPoints = [];
-
-    function clearPoints() {
-      pickedPoints = [];
-      document.getElementById("coordLog").textContent = "Click on the map to record a point...";
-    }
-
-    map.on('click', (e) => {
-      const lat = e.latlng.lat.toFixed(6);
-      const lng = e.latlng.lng.toFixed(6);
-      pickedPoints.push(`[${lat}, ${lng}]`);
-      document.getElementById("coordLog").textContent = pickedPoints.join(",\n");
-    });
 
     function getSegment(fromId, toId) {
       const forward = edgeWaypoints[`${fromId}-${toId}`];
