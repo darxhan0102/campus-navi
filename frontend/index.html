@@ -45,7 +45,34 @@
     }
     #result.show { display: block; }
     #result b { color: #1e3a8a; }
-    #map { height: 480px; border-radius: 10px; overflow: hidden; }
+    .mapCard { padding: 8px; position: relative; }
+    #map { height: 480px; border-radius: 10px; overflow: hidden; cursor: default; }
+    #map.editing { cursor: crosshair; }
+    .editBar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 4px 14px;
+    }
+    .editBar span { font-size: 13px; color: #64748b; }
+    #editToggle {
+      padding: 8px 14px; font-size: 13px; font-weight: 600; border-radius: 8px;
+      border: 1.5px solid #1e3a8a; background: white; color: #1e3a8a; cursor: pointer;
+    }
+    #editToggle.on { background: #dc2626; border-color: #dc2626; color: white; }
+    #coordPanel {
+      display: none; margin-top: 12px; padding: 14px; background: #0f172a;
+      border-radius: 10px;
+    }
+    #coordPanel.show { display: block; }
+    #coordLog {
+      font-family: 'Consolas', monospace; font-size: 12.5px; color: #93c5fd;
+      white-space: pre-wrap; max-height: 160px; overflow-y: auto; margin-bottom: 10px;
+    }
+    .coordActions { display: flex; gap: 8px; }
+    .coordActions button {
+      flex: 1; padding: 8px; font-size: 12.5px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;
+    }
+    #copyBtn { background: #1e3a8a; color: white; }
+    #clearBtn { background: #334155; color: white; }
   </style>
 </head>
 <body>
@@ -70,12 +97,23 @@
     <div id="result"></div>
   </div>
 
-  <div class="card" style="padding: 8px;">
+  <div class="card mapCard">
     <div id="map"></div>
+    <div class="editBar">
+      <span>Need coordinates for a new route? Click along a road to record points.</span>
+      <button id="editToggle" onclick="toggleEditMode()">Edit Routes</button>
+    </div>
+    <div id="coordPanel">
+      <div id="coordLog">Click on the map to record a point...</div>
+      <div class="coordActions">
+        <button id="copyBtn" onclick="copyPoints()">Copy Points</button>
+        <button id="clearBtn" onclick="clearPoints()">Clear</button>
+      </div>
+    </div>
   </div>
 
   <script>
-  const API = "https://jgi-campus-navi.onrender.com";
+    const API = "https://jgi-campus-navi.onrender.com";
 
     const CAMPUS_CENTER = [12.641610, 77.440524];
     const map = L.map('map').setView(CAMPUS_CENTER, 17);
@@ -104,6 +142,11 @@
       ],
       "N2-N7": [
         [12.642195, 77.439664], [12.642179, 77.439707], [12.642164, 77.439814], [12.642085, 77.439889]
+      ],
+      "N1-N7": [
+        [12.641365, 77.437067], [12.641250, 77.437282], [12.641753, 77.437518],
+        [12.642046, 77.437529], [12.642224, 77.437700], [12.642287, 77.439197],
+        [12.642085, 77.439889]
       ],
       "N2-N3": [
         [12.642195, 77.439664], [12.642108, 77.439803], [12.641967, 77.439771],
@@ -173,6 +216,33 @@
 
     let markerLayer = L.layerGroup().addTo(map);
     let routeLine = null;
+    let editMode = false;
+    let pickedPoints = [];
+
+    function toggleEditMode() {
+      editMode = !editMode;
+      document.getElementById("editToggle").classList.toggle("on", editMode);
+      document.getElementById("map").classList.toggle("editing", editMode);
+      document.getElementById("coordPanel").classList.toggle("show", editMode);
+    }
+
+    function clearPoints() {
+      pickedPoints = [];
+      document.getElementById("coordLog").textContent = "Click on the map to record a point...";
+    }
+
+    function copyPoints() {
+      const text = pickedPoints.join(",\n");
+      navigator.clipboard.writeText(text);
+    }
+
+    map.on('click', (e) => {
+      if (!editMode) return;
+      const lat = e.latlng.lat.toFixed(6);
+      const lng = e.latlng.lng.toFixed(6);
+      pickedPoints.push(`[${lat}, ${lng}]`);
+      document.getElementById("coordLog").textContent = pickedPoints.join(",\n");
+    });
 
     function getSegment(fromId, toId) {
       const forward = edgeWaypoints[`${fromId}-${toId}`];
