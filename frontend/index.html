@@ -5,33 +5,77 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 750px; margin: 30px auto; }
-    select, button { padding: 8px; margin: 5px 0; width: 100%; font-size: 16px; }
-    #result { margin: 15px 0; padding: 15px; background: #f0f0f0; border-radius: 8px; }
-    #map { height: 500px; border-radius: 8px; }
-    .floorLink { display: inline-block; margin: 10px 0; padding: 10px 15px; background: #2563eb;
-                 color: white; text-decoration: none; border-radius: 6px; font-size: 14px; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+      max-width: 800px; margin: 0 auto; padding: 0 20px 40px;
+      background: #f8fafc; color: #1e293b;
+    }
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;
+    }
+    .navbar h1 { font-size: 20px; margin: 0; color: #1e3a8a; }
+    .navLink {
+      background: #1e3a8a; color: white; text-decoration: none;
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      transition: background 0.15s;
+    }
+    .navLink:hover { background: #1e40af; }
+    .card {
+      background: white; border-radius: 12px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 18px;
+    }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .field { flex: 1; min-width: 200px; }
+    label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 5px; }
+    select {
+      width: 100%; padding: 10px; font-size: 15px; border: 1px solid #cbd5e1;
+      border-radius: 8px; background: white;
+    }
+    button#routeBtn {
+      width: 100%; padding: 12px; font-size: 15px; font-weight: 600;
+      background: #1e3a8a; color: white; border: none; border-radius: 8px;
+      cursor: pointer; transition: background 0.15s;
+    }
+    button#routeBtn:hover { background: #1e40af; }
+    #result {
+      padding: 14px 18px; background: #eff6ff; border-left: 4px solid #1e3a8a;
+      border-radius: 8px; margin-top: 14px; font-size: 14px; display: none;
+    }
+    #result.show { display: block; }
+    #result b { color: #1e3a8a; }
+    #map { height: 480px; border-radius: 10px; overflow: hidden; }
   </style>
 </head>
 <body>
-  <h2>Campus Navigator</h2>
 
-  <a class="floorLink" href="floor-guide.html">Inside FET — Floor Guide →</a>
+  <div class="navbar">
+    <h1>Campus Navigator</h1>
+    <a class="navLink" href="floor-guide.html">Inside FET — Floor Guide →</a>
+  </div>
 
-  <label>From:</label>
-  <select id="fromSelect"></select>
+  <div class="card">
+    <div class="row">
+      <div class="field">
+        <label>From</label>
+        <select id="fromSelect"></select>
+      </div>
+      <div class="field">
+        <label>To</label>
+        <select id="toSelect"></select>
+      </div>
+    </div>
+    <button id="routeBtn" onclick="findRoute()">Find Route</button>
+    <div id="result"></div>
+  </div>
 
-  <label>To:</label>
-  <select id="toSelect"></select>
-
-  <button onclick="findRoute()">Find Route</button>
-
-  <div id="result"></div>
-
-  <div id="map"></div>
+  <div class="card" style="padding: 8px;">
+    <div id="map"></div>
+  </div>
 
   <script>
-    const API = "http://127.0.0.1:5000";
+  const API = "https://jgi-campus-navi.onrender.com";
 
     const CAMPUS_CENTER = [12.641610, 77.440524];
     const map = L.map('map').setView(CAMPUS_CENTER, 17);
@@ -169,14 +213,16 @@
       const resultDiv = document.getElementById("result");
 
       if (data.error) {
-        resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+        resultDiv.innerHTML = `${data.error}`;
+        resultDiv.classList.add("show");
         return;
       }
 
       resultDiv.innerHTML = `
-        <p><b>Route:</b> ${data.path.join(" → ")}</p>
-        <p><b>Distance:</b> ${data.distance} meters</p>
+        <div><b>Route:</b> ${data.path.join(" → ")}</div>
+        <div><b>Distance:</b> ${data.distance} meters</div>
       `;
+      resultDiv.classList.add("show");
 
       let fullLine = [];
       for (let i = 0; i < data.path.length - 1; i++) {
@@ -184,7 +230,7 @@
       }
 
       if (routeLine) map.removeLayer(routeLine);
-      routeLine = L.polyline(fullLine, { color: 'red', weight: 4 }).addTo(map);
+      routeLine = L.polyline(fullLine, { color: '#dc2626', weight: 4 }).addTo(map);
       map.fitBounds(routeLine.getBounds());
     }
 
