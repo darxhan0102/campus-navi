@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import heapq
@@ -36,8 +37,8 @@ campus_graph = {
         {"from": "N9", "to": "N8", "distance": 140},
         {"from": "N7", "to": "N3", "distance": 180},
         {"from": "N7", "to": "N4", "distance": 185},
-        {"from": "N5", "to": "N6", "distance": 15},
-        {"from": "N6", "to": "N4", "distance": 22},
+        {"from": "N5", "to": "N6", "distance": 57},
+        {"from": "N6", "to": "N4", "distance": 40},
         {"from": "N4", "to": "N3", "distance": 35}
     ]
 }
@@ -100,7 +101,6 @@ def get_route():
 @app.route("/locations", methods=["GET"])
 def get_locations():
     return jsonify(campus_graph["nodes"])
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
