@@ -48,6 +48,7 @@
     .mapCard { padding: 8px; position: relative; }
     #map { height: 480px; border-radius: 10px; overflow: hidden; cursor: default; }
     #map.editing { cursor: crosshair; }
+    #map.editing .leaflet-interactive { pointer-events: none; cursor: crosshair; }
     .editBar {
       display: flex; justify-content: space-between; align-items: center;
       padding: 10px 4px 14px;
@@ -272,7 +273,13 @@
 
         const coord = nodeCoords[node.id];
         if (coord) {
-          L.marker([coord.lat, coord.lng]).addTo(markerLayer).bindPopup(node.name);
+          L.circleMarker([coord.lat, coord.lng], {
+            radius: 4,
+            color: 'white',
+            weight: 1.5,
+            fillColor: '#1e3a8a',
+            fillOpacity: 1
+          }).addTo(markerLayer).bindTooltip(node.name);
         }
       });
     }
