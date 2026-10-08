@@ -37,9 +37,11 @@ campus_graph = {
         {"from": "N9", "to": "N8", "distance": 140},
         {"from": "N7", "to": "N3", "distance": 180},
         {"from": "N7", "to": "N4", "distance": 185},
-        {"from": "N5", "to": "N6", "distance": 57},
-        {"from": "N6", "to": "N4", "distance": 40},
-        {"from": "N4", "to": "N3", "distance": 35}
+        {"from": "N5", "to": "N6", "distance": 58},
+        {"from": "N6", "to": "N4", "distance": 61},
+        {"from": "N4", "to": "N3", "distance": 61},
+        {"from": "N3", "to": "N6", "distance": 104},
+        {"from": "N3", "to": "N5", "distance": 153}
     ]
 }
 
@@ -105,4 +107,3 @@ def get_locations():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
-    
