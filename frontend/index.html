@@ -1,81 +1,225 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Campus Navigator</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-      max-width: 800px; margin: 0 auto; padding: 0 20px 40px;
-      background: #f8fafc; color: #1e293b;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      background: #f8fafc;
+      color: #1e293b;
     }
+
     .navbar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 18px 0; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 20px;
     }
-    .navbar h1 { font-size: 20px; margin: 0; color: #1e3a8a; }
+
+    .navbar h1 {
+      font-size: 20px;
+      margin: 0;
+      color: #1e3a8a;
+    }
+
     .navLink {
-      background: #1e3a8a; color: white; text-decoration: none;
-      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500;
+      background: #1e3a8a;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
       transition: background 0.15s;
     }
-    .navLink:hover { background: #1e40af; }
+
+    .navLink:hover {
+      background: #1e40af;
+    }
+
     .card {
-      background: white; border-radius: 12px; padding: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 18px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      margin-bottom: 18px;
     }
-    .row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-    .field { flex: 1; min-width: 200px; }
-    label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-bottom: 5px; }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      display: block;
+      margin-bottom: 5px;
+    }
+
     select {
-      width: 100%; padding: 10px; font-size: 15px; border: 1px solid #cbd5e1;
-      border-radius: 8px; background: white;
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: white;
     }
+
     button#routeBtn {
-      width: 100%; padding: 12px; font-size: 15px; font-weight: 600;
-      background: #1e3a8a; color: white; border: none; border-radius: 8px;
-      cursor: pointer; transition: background 0.15s;
+      width: 100%;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      background: #1e3a8a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
     }
-    button#routeBtn:hover { background: #1e40af; }
+
+    button#routeBtn:hover {
+      background: #1e40af;
+    }
+
     #result {
-      padding: 14px 18px; background: #eff6ff; border-left: 4px solid #1e3a8a;
-      border-radius: 8px; margin-top: 14px; font-size: 14px; display: none;
+      padding: 14px 18px;
+      background: #eff6ff;
+      border-left: 4px solid #1e3a8a;
+      border-radius: 8px;
+      margin-top: 14px;
+      font-size: 14px;
+      display: none;
     }
-    #result.show { display: block; }
-    #result b { color: #1e3a8a; }
-    .mapCard { padding: 8px; position: relative; }
-    #map { height: 480px; border-radius: 10px; overflow: hidden; cursor: default; }
-    #map.editing { cursor: crosshair; }
-    #map.editing .leaflet-interactive { pointer-events: none; cursor: crosshair; }
+
+    #result.show {
+      display: block;
+    }
+
+    #result b {
+      color: #1e3a8a;
+    }
+
+    .mapCard {
+      padding: 8px;
+      position: relative;
+    }
+
+    #map {
+      height: 480px;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    #map.editing {
+      cursor: crosshair;
+    }
+
+    #map.editing .leaflet-interactive {
+      pointer-events: none;
+      cursor: crosshair;
+    }
+
     .editBar {
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 10px 4px 14px;
     }
-    .editBar span { font-size: 13px; color: #64748b; }
-    #editToggle {
-      padding: 8px 14px; font-size: 13px; font-weight: 600; border-radius: 8px;
-      border: 1.5px solid #1e3a8a; background: white; color: #1e3a8a; cursor: pointer;
+
+    .editBar span {
+      font-size: 13px;
+      color: #64748b;
     }
-    #editToggle.on { background: #dc2626; border-color: #dc2626; color: white; }
+
+    #editToggle {
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1.5px solid #1e3a8a;
+      background: white;
+      color: #1e3a8a;
+      cursor: pointer;
+    }
+
+    #editToggle.on {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: white;
+    }
+
     #coordPanel {
-      display: none; margin-top: 12px; padding: 14px; background: #0f172a;
+      display: none;
+      margin-top: 12px;
+      padding: 14px;
+      background: #0f172a;
       border-radius: 10px;
     }
-    #coordPanel.show { display: block; }
+
+    #coordPanel.show {
+      display: block;
+    }
+
     #coordLog {
-      font-family: 'Consolas', monospace; font-size: 12.5px; color: #93c5fd;
-      white-space: pre-wrap; max-height: 160px; overflow-y: auto; margin-bottom: 10px;
+      font-family: 'Consolas', monospace;
+      font-size: 12.5px;
+      color: #93c5fd;
+      white-space: pre-wrap;
+      max-height: 160px;
+      overflow-y: auto;
+      margin-bottom: 10px;
     }
-    .coordActions { display: flex; gap: 8px; }
+
+    .coordActions {
+      display: flex;
+      gap: 8px;
+    }
+
     .coordActions button {
-      flex: 1; padding: 8px; font-size: 12.5px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;
+      flex: 1;
+      padding: 8px;
+      font-size: 12.5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
     }
-    #copyBtn { background: #1e3a8a; color: white; }
-    #clearBtn { background: #334155; color: white; }
+
+    #copyBtn {
+      background: #1e3a8a;
+      color: white;
+    }
+
+    #clearBtn {
+      background: #334155;
+      color: white;
+    }
   </style>
 </head>
+
 <body>
 
   <div class="navbar">
@@ -235,6 +379,20 @@
         [12.641043, 77.440581], [12.641286, 77.440592], [12.641264, 77.440973],
         [12.641133, 77.441193], [12.640871, 77.441193], [12.640624, 77.441193]
       ],
+      "N2-N6": [
+        [12.642195, 77.439664],
+        [12.642171, 77.439814], [12.641967, 77.439766], [12.641732, 77.439814],
+        [12.641407, 77.440211], [12.641292, 77.440602], [12.641271, 77.441176],
+        [12.641135, 77.441203],
+        [12.641143, 77.441198]
+      ],
+      "N2-N5": [
+        [12.642195, 77.439664],
+        [12.642171, 77.439814], [12.641967, 77.439766], [12.641732, 77.439814],
+        [12.641407, 77.440211], [12.641292, 77.440602], [12.641271, 77.441176],
+        [12.641135, 77.441203], [12.640630, 77.441187],
+        [12.640624, 77.441193]
+      ],
     };
 
     let markerLayer = L.layerGroup().addTo(map);
@@ -336,4 +494,5 @@
     loadLocations();
   </script>
 </body>
+
 </html>
