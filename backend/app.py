@@ -39,12 +39,16 @@ campus_graph = {
         {"from": "N7", "to": "N4", "distance": 185},
         {"from": "N5", "to": "N6", "distance": 58},
         {"from": "N6", "to": "N4", "distance": 61},
-        {"from": "N4", "to": "N3", "distance": 61},
-        {"from": "N3", "to": "N6", "distance": 104},
+        {"from": "N4", "to": "N3", "distance": 43},
+        {"from": "N3", "to": "N6", "distance": 103},
         {"from": "N3", "to": "N5", "distance": 153},
         {"from": "N9", "to": "N4", "distance": 944},
-        {"from": "N9", "to": "N6", "distance": 1005},
-        {"from": "N9", "to": "N5", "distance": 1059}
+        {"from": "N9", "to": "N6", "distance": 1004},
+        {"from": "N9", "to": "N5", "distance": 1059},
+        {"from": "N8", "to": "N3", "distance": 1049},
+        {"from": "N8", "to": "N4", "distance": 1060},
+        {"from": "N8", "to": "N6", "distance": 1098},
+        {"from": "N8", "to": "N5", "distance": 1155}
     ]
 }
 
