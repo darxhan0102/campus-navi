@@ -2,6 +2,8 @@
 <html>
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Campus Navigator</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -216,6 +218,68 @@
     #clearBtn {
       background: #334155;
       color: white;
+    }
+
+    /* Phone layout */
+    @media (max-width: 600px) {
+      body {
+        padding: 0 12px 30px;
+      }
+
+      .navbar {
+        padding: 14px 0;
+        margin-bottom: 14px;
+        gap: 8px;
+      }
+
+      .navbar h1 {
+        font-size: 17px;
+      }
+
+      .navLink {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+
+      .card {
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .field {
+        min-width: 0;
+      }
+
+      select {
+        font-size: 16px;
+        padding: 11px;
+      }
+
+      button#routeBtn {
+        padding: 14px;
+        font-size: 16px;
+      }
+
+      #map {
+        height: 60vh;
+        min-height: 320px;
+      }
+
+      .editBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      #editToggle {
+        width: 100%;
+        padding: 10px;
+      }
     }
   </style>
 </head>
