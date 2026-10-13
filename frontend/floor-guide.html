@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FET Floor Guide</title>
+  <title>FET Floor Guide — Campus Navi</title>
+  <link rel="icon" type="image/png" href="logo.png" />
   <style>
     * {
       box-sizing: border-box;
@@ -23,15 +24,53 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 18px 0;
+      padding: 16px 0;
       border-bottom: 1px solid #e2e8f0;
       margin-bottom: 20px;
+      gap: 12px;
     }
 
-    .navbar h1 {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brandLogo {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2e8f0;
+      padding: 2px;
+      display: block;
+    }
+
+    .brandText {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brandTitle {
       font-size: 20px;
       margin: 0;
-      color: #1e3a8a;
+      color: #0b3558;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      line-height: 1.2;
+    }
+
+    .brandSubtitle {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      margin-top: 2px;
     }
 
     .navLink {
@@ -163,13 +202,22 @@
       }
 
       .navbar {
-        padding: 14px 0;
+        padding: 12px 0;
         margin-bottom: 14px;
-        gap: 8px;
+        gap: 10px;
+        flex-wrap: wrap;
       }
 
-      .navbar h1 {
+      .brandLogo {
+        height: 42px;
+      }
+
+      .brandTitle {
         font-size: 17px;
+      }
+
+      .brandSubtitle {
+        font-size: 9.5px;
       }
 
       .navLink {
@@ -202,7 +250,13 @@
 <body>
 
   <div class="navbar">
-    <h1>FET Floor Guide</h1>
+    <a href="index.html" class="brand">
+      <img src="logo.png" alt="Campus Navi" class="brandLogo">
+      <div class="brandText">
+        <h1 class="brandTitle">FET Floor Guide</h1>
+        <span class="brandSubtitle">Campus Navi • JAIN University</span>
+      </div>
+    </a>
     <a class="navLink" href="index.html">← Campus Map</a>
   </div>
 
