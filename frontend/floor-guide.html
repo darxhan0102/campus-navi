@@ -4,184 +4,305 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FET Floor Guide — Campus Navi</title>
-  <link rel="icon" type="image/png" href="logo.png" />
+  <meta name="theme-color" content="#226192">
+  <title>FET Floor Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --ivory: #EAE6DE;
+      --blue: #226192;
+      --coral: #EF8557;
+      --ink: #15283a;
+      --muted: #4d5b68;
+      --hair: rgba(21, 40, 58, 0.28);
+    }
+
     * {
       box-sizing: border-box;
     }
 
-    body {
-      font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 20px 40px;
-      background: #f8fafc;
-      color: #1e293b;
+    html {
+      -webkit-text-size-adjust: 100%;
     }
 
-    .navbar {
+    body {
+      margin: 0;
+      background: var(--ivory);
+      color: var(--ink);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header band */
+    .band {
+      background: var(--blue);
+      color: var(--ivory);
+      border-bottom: 8px solid var(--coral);
+    }
+
+    .band .wrap {
+      padding-top: 22px;
+      padding-bottom: 40px;
+    }
+
+    .band-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 0;
-      border-bottom: 1px solid #e2e8f0;
-      margin-bottom: 20px;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 56px;
     }
 
-    .brand {
+    .kicker {
       display: flex;
       align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .brandLogo {
-      height: 52px;
-      width: auto;
-      object-fit: contain;
-      border-radius: 8px;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      border: 1px solid #e2e8f0;
-      padding: 2px;
-      display: block;
-    }
-
-    .brandText {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brandTitle {
-      font-size: 20px;
-      margin: 0;
-      color: #0b3558;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-      line-height: 1.2;
-    }
-
-    .brandSubtitle {
-      font-size: 11px;
-      color: #64748b;
+      gap: 10px;
+      font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      margin-top: 2px;
+    }
+
+    .kicker::before {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: var(--coral);
+      display: inline-block;
     }
 
     .navLink {
-      background: #1e3a8a;
-      color: white;
+      color: var(--ivory);
       text-decoration: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      transition: background 0.15s;
+      border: 1.5px solid var(--ivory);
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
 
     .navLink:hover {
-      background: #1e40af;
+      background: var(--coral);
+      border-color: var(--coral);
+      color: var(--ink);
     }
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      margin-bottom: 18px;
+    .band h1 {
+      margin: 0;
+      font-size: clamp(44px, 10vw, 112px);
+      line-height: 0.92;
+      font-weight: 800;
+      letter-spacing: -0.05em;
     }
 
-    .note {
-      background: #eff6ff;
-      border-left: 4px solid #1e3a8a;
-      padding: 12px 16px;
-      font-size: 13px;
-      color: #334155;
-      border-radius: 8px;
-      line-height: 1.6;
+    .lede {
+      margin: 28px 0 0;
+      max-width: 34ch;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 500;
+      opacity: 0.92;
     }
 
-    #floorTabs {
+    /* Sections */
+    main {
+      padding-top: 48px;
+    }
+
+    .section {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      column-gap: 32px;
+      padding: 32px 0 44px;
+      border-top: 2px solid var(--ink);
+    }
+
+    .rail {
       display: flex;
-      gap: 8px;
-      margin-top: 16px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .num {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.1em;
+    }
+
+    .lbl {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    /* Notes */
+    .info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .info h4 {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .info p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* Floor tabs */
+    #floorTabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 4px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      margin-bottom: 28px;
     }
 
     #floorTabs button {
-      flex: 1;
-      min-width: 80px;
-      padding: 10px;
-      border: 1.5px solid #1e3a8a;
-      background: white;
-      color: #1e3a8a;
-      border-radius: 8px;
+      text-align: left;
+      padding: 14px 12px 16px;
+      border: 0;
+      border-right: 1px solid var(--hair);
+      background: transparent;
+      color: var(--ink);
+      font-family: inherit;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    #floorTabs button:last-child {
+      border-right: 0;
+    }
+
+    #floorTabs button:hover {
+      background: rgba(239, 133, 87, 0.25);
     }
 
     #floorTabs button.active {
-      background: #1e3a8a;
-      color: white;
+      background: var(--blue);
+      color: var(--ivory);
     }
 
+    .tnum {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+    }
+
+    .tname {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* Search */
     #searchBox {
-      padding: 11px 14px;
       width: 100%;
-      font-size: 15px;
-      margin-top: 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+      padding: 12px 0;
+      font-size: 18px;
+      font-weight: 500;
+      font-family: inherit;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      border-bottom: 3px solid var(--ink);
+      border-radius: 0;
+      margin-bottom: 36px;
     }
 
-    .columns {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+    #searchBox::placeholder {
+      color: var(--muted);
     }
 
-    .column {
-      flex: 1;
-      min-width: 260px;
+    #searchBox:focus {
+      outline: none;
+      border-bottom-color: var(--coral);
+    }
+
+    /* Lists */
+    .lists {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
     }
 
     .column h3 {
-      background: #334155;
-      color: white;
-      padding: 9px 14px;
-      border-radius: 8px;
-      font-size: 14px;
-      margin-bottom: 4px;
+      margin: 0 0 4px;
+      padding-top: 10px;
+      border-top: 6px solid var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    #rightColumn h3 {
+      border-top-color: var(--coral);
     }
 
     .stop {
-      padding: 11px 4px;
-      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+      padding: 14px 6px;
+      border-bottom: 1px solid var(--hair);
+      transition: background 0.15s;
+    }
+
+    .stop:hover {
+      background: rgba(239, 133, 87, 0.15);
     }
 
     .stop .name {
       font-weight: 600;
-      font-size: 14.5px;
+      font-size: 16px;
+      flex: 1 1 52%;
     }
 
     .stop .distance {
-      color: #1e3a8a;
       font-size: 13px;
-      font-weight: 500;
+      color: var(--blue);
+      font-weight: 600;
+      text-align: right;
+      flex: 0 1 40%;
+      font-variant-numeric: tabular-nums;
+      padding-top: 2px;
     }
 
     .stop .note {
+      flex: 0 0 100%;
       font-size: 12.5px;
-      color: #64748b;
-      margin-top: 3px;
-      line-height: 1.4;
+      color: var(--muted);
+      line-height: 1.45;
     }
 
     .hidden {
@@ -189,59 +310,100 @@
     }
 
     .disclaimer {
+      margin: 0;
       font-size: 12px;
-      color: #94a3b8;
-      margin-top: 16px;
-      text-align: center;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    /* Footer */
+    .foot {
+      border-top: 2px solid var(--ink);
+    }
+
+    .foot .wrap {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 16px;
+      padding-bottom: 32px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--muted);
     }
 
     /* Phone layout */
-    @media (max-width: 600px) {
-      body {
-        padding: 0 12px 30px;
+    @media (max-width: 720px) {
+      .wrap {
+        padding: 0 16px;
       }
 
-      .navbar {
-        padding: 12px 0;
-        margin-bottom: 14px;
-        gap: 10px;
-        flex-wrap: wrap;
+      .band .wrap {
+        padding-top: 16px;
+        padding-bottom: 28px;
       }
 
-      .brandLogo {
-        height: 42px;
-      }
-
-      .brandTitle {
-        font-size: 17px;
-      }
-
-      .brandSubtitle {
-        font-size: 9.5px;
+      .band-top {
+        margin-bottom: 36px;
       }
 
       .navLink {
-        padding: 7px 12px;
-        font-size: 12px;
+        padding: 9px 12px;
+        font-size: 11px;
       }
 
-      .card {
-        padding: 14px;
-        margin-bottom: 14px;
+      .lede {
+        font-size: 16px;
+      }
+
+      main {
+        padding-top: 32px;
+      }
+
+      .section {
+        grid-template-columns: 1fr;
+        row-gap: 18px;
+        padding: 24px 0 32px;
+      }
+
+      .rail {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 12px;
+      }
+
+      .lbl {
+        font-size: 22px;
+      }
+
+      .info {
+        grid-template-columns: 1fr;
+        gap: 20px;
       }
 
       #floorTabs button {
-        min-width: 52px;
-        padding: 9px 4px;
+        padding: 10px 8px 12px;
+        gap: 12px;
+      }
+
+      .tname {
         font-size: 13px;
       }
 
       #searchBox {
         font-size: 16px;
+        margin-bottom: 28px;
       }
 
-      .column {
-        min-width: 100%;
+      .lists {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .foot .wrap {
+        flex-direction: column;
+        gap: 4px;
       }
     }
   </style>
@@ -249,42 +411,60 @@
 
 <body>
 
-  <div class="navbar">
-    <a href="index.html" class="brand">
-      <img src="logo.png" alt="Campus Navi" class="brandLogo">
-      <div class="brandText">
-        <h1 class="brandTitle">FET Floor Guide</h1>
-        <span class="brandSubtitle">Campus Navi • JAIN University</span>
+  <header class="band">
+    <div class="wrap">
+      <div class="band-top">
+        <span class="kicker">Faculty of Engineering and Technology</span>
+        <a class="navLink" href="index.html">← Campus Map</a>
       </div>
-    </a>
-    <a class="navLink" href="index.html">← Campus Map</a>
-  </div>
-
-  <div class="card">
-    <div class="note">
-      <b>Two entrances to this block:</b> Main Entrance (front) and a second entrance near Kota's Café / Himalaya Hostel
-      side.<br>
-      <b>Washrooms:</b> Located on the mid-landing between every pair of floors (Ground–1st, 1st–2nd, 2nd–3rd, 3rd–4th),
-      reachable via Stairs A or Stairs B. No washrooms elsewhere.
+      <h1>FET<br>Floor Guide</h1>
+      <p class="lede">Find rooms, labs and washrooms inside the building, floor by floor.</p>
     </div>
-    <div id="floorTabs"></div>
-    <input type="text" id="searchBox" placeholder="Search (e.g. washroom, lab, lecture hall)..."
-      oninput="filterStops()">
-  </div>
+  </header>
 
-  <div class="card">
-    <div class="columns">
-      <div class="column" id="leftColumn">
-        <h3 id="leftTitle">Stairs A Side</h3>
+  <main class="wrap">
+    <section class="section">
+      <div class="rail"><span class="num">01</span><span class="lbl">Notes</span></div>
+      <div class="info">
+        <div>
+          <h4>Entrances</h4>
+          <p>Two entrances to this block: Main Entrance (front) and a second entrance near Kota's Café / Himalaya Hostel
+            side.</p>
+        </div>
+        <div>
+          <h4>Washrooms</h4>
+          <p>Located on the mid-landing between every pair of floors (Ground–1st, 1st–2nd, 2nd–3rd, 3rd–4th), reachable
+            via Stairs A or Stairs B. No washrooms elsewhere.</p>
+        </div>
       </div>
-      <div class="column" id="rightColumn">
-        <h3 id="rightTitle">Stairs B Side</h3>
+    </section>
+
+    <section class="section">
+      <div class="rail"><span class="num">02</span><span class="lbl">Floors</span></div>
+      <div>
+        <div id="floorTabs"></div>
+        <input type="text" id="searchBox" placeholder="Search washroom, lab, lecture hall" oninput="filterStops()">
+        <div class="lists">
+          <div class="column" id="leftColumn">
+            <h3 id="leftTitle">Stairs A side</h3>
+          </div>
+          <div class="column" id="rightColumn">
+            <h3 id="rightTitle">Stairs B side</h3>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <p class="disclaimer">Floors 1–4 are read off older fire-escape signage — confirm room order in person and edit this
+      file to correct anything.</p>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <span>Campus Navi</span>
+      <span>JAIN Global Campus</span>
     </div>
-  </div>
-
-  <p class="disclaimer">Floors 1–4 are read off older fire-escape signage — confirm room order in person and edit this
-    file to correct anything.</p>
+  </footer>
 
   <script>
     const floors = {
@@ -374,6 +554,7 @@
       }
     };
 
+    const floorNumbers = { "Ground": "00", "First": "01", "Second": "02", "Third": "03", "Fourth": "04" };
     let currentFloor = "Ground";
 
     function renderFloorTabs() {
@@ -381,7 +562,7 @@
       container.innerHTML = "";
       Object.keys(floors).forEach(floorName => {
         const btn = document.createElement("button");
-        btn.textContent = floorName;
+        btn.innerHTML = `<span class="tnum">${floorNumbers[floorName]}</span><span class="tname">${floorName}</span>`;
         btn.className = floorName === currentFloor ? "active" : "";
         btn.onclick = () => { currentFloor = floorName; renderAll(); };
         container.appendChild(btn);
