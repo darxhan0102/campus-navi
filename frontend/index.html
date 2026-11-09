@@ -4,109 +4,116 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Campus Navi — JAIN (Deemed-to-be University)</title>
-  <link rel="icon" type="image/png" href="logo.png" />
+  <meta name="theme-color" content="#226192">
+  <title>Campus Navi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
+    :root {
+      --ivory: #EAE6DE;
+      --ivory-light: #F6F3EC;
+      --blue: #226192;
+      --blue-dark: #174a73;
+      --coral: #EF8557;
+      --coral-dark: #DD6F3F;
+      --ink: #15283a;
+      --muted: #5f6d79;
+      --line: rgba(34, 97, 146, 0.18);
+      --shadow: 0 8px 24px rgba(23, 74, 115, 0.10);
+    }
+
     * {
       box-sizing: border-box;
     }
 
     body {
-      font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-      max-width: 800px;
+      font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+      max-width: 820px;
       margin: 0 auto;
-      padding: 0 20px 40px;
-      background: #f8fafc;
-      color: #1e293b;
+      padding: 0 20px 48px;
+      background: var(--ivory);
+      color: var(--ink);
     }
 
-    .navbar {
+    /* Header banner */
+    .hero {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 0;
-      border-bottom: 1px solid #e2e8f0;
-      margin-bottom: 20px;
-      gap: 12px;
+      gap: 16px;
+      margin: 20px 0 22px;
+      padding: 26px 28px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--blue) 0%, #1b4f78 100%);
+      color: var(--ivory);
+      border-bottom: 4px solid var(--coral);
+      box-shadow: var(--shadow);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: inherit;
+      gap: 14px;
     }
 
-    .brandLogo {
-      height: 52px;
-      width: auto;
-      object-fit: contain;
-      border-radius: 8px;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      border: 1px solid #abc7ed;
-      padding: 2px;
-      display: block;
+    .brand svg {
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
     }
 
-    .brandText {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brandTitle {
-      font-size: 20px;
-      margin: 0;
-      color: #0b3558;
+    .hero h1 {
+      font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      font-size: 28px;
       font-weight: 700;
-      letter-spacing: -0.2px;
-      line-height: 1.2;
-    }
-
-    .brandNavi {
-      color: #e5a812;
-    }
-
-    .brandSubtitle {
-      font-size: 11px;
-      color: #64748b;
-      font-weight: 600;
+      margin: 0;
       letter-spacing: 0.3px;
-      text-transform: uppercase;
-      margin-top: 2px;
+    }
+
+    .hero p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      opacity: 0.85;
+      letter-spacing: 0.4px;
     }
 
     .navLink {
-      background: #1e3a8a;
-      color: white;
+      background: var(--coral);
+      color: var(--ink);
       text-decoration: none;
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
       font-size: 13px;
-      font-weight: 500;
-      transition: background 0.15s;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.15s;
     }
 
     .navLink:hover {
-      background: #1e40af;
+      background: var(--coral-dark);
+      transform: translateY(-1px);
     }
 
+    /* Cards */
     .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      margin-bottom: 18px;
+      background: var(--ivory-light);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
     }
 
     .row {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .field {
@@ -115,47 +122,65 @@
     }
 
     label {
-      font-size: 13px;
-      font-weight: 600;
-      color: #475569;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--blue);
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
     }
 
     select {
       width: 100%;
-      padding: 10px;
+      padding: 11px 12px;
       font-size: 15px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      background: white;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #FBF9F5;
+      font-family: inherit;
+    }
+
+    select:focus {
+      outline: 2px solid var(--coral);
+      outline-offset: 1px;
     }
 
     button#routeBtn {
       width: 100%;
-      padding: 12px;
+      padding: 13px;
       font-size: 15px;
       font-weight: 600;
-      background: #1e3a8a;
-      color: white;
+      font-family: inherit;
+      background: var(--blue);
+      color: var(--ivory);
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
+      letter-spacing: 0.3px;
       transition: background 0.15s;
+      box-shadow: 0 4px 0 var(--coral);
     }
 
     button#routeBtn:hover {
-      background: #1e40af;
+      background: var(--blue-dark);
+    }
+
+    button#routeBtn:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--coral);
     }
 
     #result {
       padding: 14px 18px;
-      background: #eff6ff;
-      border-left: 4px solid #1e3a8a;
-      border-radius: 8px;
-      margin-top: 14px;
+      background: rgba(239, 133, 87, 0.12);
+      border-left: 4px solid var(--coral);
+      border-radius: 10px;
+      margin-top: 18px;
       font-size: 14px;
       display: none;
+      line-height: 1.6;
     }
 
     #result.show {
@@ -163,9 +188,10 @@
     }
 
     #result b {
-      color: #1e3a8a;
+      color: var(--blue);
     }
 
+    /* Map */
     .mapCard {
       padding: 8px;
       position: relative;
@@ -173,9 +199,13 @@
 
     #map {
       height: 480px;
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
       cursor: default;
+    }
+
+    #map .leaflet-tile-pane {
+      filter: sepia(0.2) saturate(0.95) contrast(1.02);
     }
 
     #map.editing {
@@ -187,41 +217,74 @@
       cursor: crosshair;
     }
 
+    .leaflet-bar a {
+      color: var(--blue);
+    }
+
+    .leaflet-tooltip {
+      background: var(--blue);
+      color: var(--ivory);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .leaflet-tooltip-top:before {
+      border-top-color: var(--blue);
+    }
+
+    .leaflet-tooltip-bottom:before {
+      border-bottom-color: var(--blue);
+    }
+
+    .leaflet-tooltip-left:before {
+      border-left-color: var(--blue);
+    }
+
+    .leaflet-tooltip-right:before {
+      border-right-color: var(--blue);
+    }
+
     .editBar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 4px 14px;
+      gap: 12px;
+      padding: 12px 6px 14px;
     }
 
     .editBar span {
       font-size: 13px;
-      color: #64748b;
+      color: var(--muted);
     }
 
     #editToggle {
       padding: 8px 14px;
       font-size: 13px;
       font-weight: 600;
-      border-radius: 8px;
-      border: 1.5px solid #1e3a8a;
-      background: white;
-      color: #1e3a8a;
+      border-radius: 999px;
+      border: 1.5px solid var(--blue);
+      background: transparent;
+      color: var(--blue);
       cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
     }
 
     #editToggle.on {
-      background: #dc2626;
-      border-color: #dc2626;
-      color: white;
+      background: var(--coral);
+      border-color: var(--coral);
+      color: var(--ink);
     }
 
     #coordPanel {
       display: none;
-      margin-top: 12px;
+      margin-top: 4px;
       padding: 14px;
-      background: #0f172a;
-      border-radius: 10px;
+      background: #12293c;
+      border-radius: 12px;
     }
 
     #coordPanel.show {
@@ -231,7 +294,7 @@
     #coordLog {
       font-family: 'Consolas', monospace;
       font-size: 12.5px;
-      color: #93c5fd;
+      color: var(--ivory);
       white-space: pre-wrap;
       max-height: 160px;
       overflow-y: auto;
@@ -248,59 +311,59 @@
       padding: 8px;
       font-size: 12.5px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
+      font-family: inherit;
     }
 
     #copyBtn {
-      background: #1e3a8a;
-      color: white;
+      background: var(--coral);
+      color: var(--ink);
     }
 
     #clearBtn {
-      background: #334155;
-      color: white;
+      background: var(--blue);
+      color: var(--ivory);
     }
 
     /* Phone layout */
     @media (max-width: 600px) {
       body {
-        padding: 0 12px 30px;
+        padding: 0 12px 36px;
       }
 
-      .navbar {
-        padding: 12px 0;
-        margin-bottom: 14px;
-        gap: 10px;
-        flex-wrap: wrap;
+      .hero {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        margin: 14px 0 16px;
+        border-radius: 16px;
       }
 
-      .brandLogo {
-        height: 42px;
+      .hero h1 {
+        font-size: 24px;
       }
 
-      .brandTitle {
-        font-size: 17px;
-      }
-
-      .brandSubtitle {
-        font-size: 9.5px;
+      .brand svg {
+        width: 40px;
+        height: 40px;
       }
 
       .navLink {
-        padding: 7px 12px;
-        font-size: 12px;
+        align-self: stretch;
+        text-align: center;
       }
 
       .card {
-        padding: 14px;
-        margin-bottom: 14px;
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 16px;
       }
 
       .row {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
       }
 
       .field {
@@ -309,11 +372,11 @@
 
       select {
         font-size: 16px;
-        padding: 11px;
+        padding: 12px;
       }
 
       button#routeBtn {
-        padding: 14px;
+        padding: 15px;
         font-size: 16px;
       }
 
@@ -325,12 +388,11 @@
       .editBar {
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;
       }
 
       #editToggle {
         width: 100%;
-        padding: 10px;
+        padding: 11px;
       }
     }
   </style>
@@ -338,12 +400,16 @@
 
 <body>
 
-  <div class="navbar">
+  <div class="hero">
     <div class="brand">
-      <img src="logo.png" alt="Campus Navi" class="brandLogo">
-      <div class="brandText">
-        <h1 class="brandTitle">Campus <span class="brandNavi">Navi</span></h1>
-        <span class="brandSubtitle">JAIN (Deemed-to-be University)</span>
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="20" fill="none" stroke="#EAE6DE" stroke-width="2.5" stroke-dasharray="100 26"
+          stroke-linecap="round" />
+        <path d="M33 13 L14 22 L23 25 L26 34 Z" fill="#EF8557" />
+      </svg>
+      <div>
+        <h1>Campus Navi</h1>
+        <p>Find your way across the JAIN Global Campus</p>
       </div>
     </div>
     <a class="navLink" href="floor-guide.html">Inside FET — Floor Guide →</a>
@@ -599,7 +665,9 @@
     };
 
     let markerLayer = L.layerGroup().addTo(map);
+    let routeMarkers = L.layerGroup().addTo(map);
     let routeLine = null;
+    let routeCasing = null;
     let editMode = false;
     let pickedPoints = [];
 
@@ -654,9 +722,9 @@
         if (coord) {
           L.circleMarker([coord.lat, coord.lng], {
             radius: 4,
-            color: 'white',
+            color: '#EAE6DE',
             weight: 1.5,
-            fillColor: '#1e3a8a',
+            fillColor: '#226192',
             fillOpacity: 1
           }).addTo(markerLayer).bindTooltip(node.name);
         }
@@ -689,8 +757,26 @@
         fullLine = fullLine.concat(getSegment(data.path[i], data.path[i + 1]));
       }
 
+      if (routeCasing) map.removeLayer(routeCasing);
       if (routeLine) map.removeLayer(routeLine);
-      routeLine = L.polyline(fullLine, { color: '#dc2626', weight: 4 }).addTo(map);
+      routeMarkers.clearLayers();
+
+      routeCasing = L.polyline(fullLine, {
+        color: '#226192', weight: 8, opacity: 0.9, lineCap: 'round', lineJoin: 'round'
+      }).addTo(map);
+      routeLine = L.polyline(fullLine, {
+        color: '#EF8557', weight: 4, lineCap: 'round', lineJoin: 'round'
+      }).addTo(map);
+
+      if (fullLine.length > 0) {
+        L.circleMarker(fullLine[0], {
+          radius: 7, color: '#226192', weight: 3, fillColor: '#EAE6DE', fillOpacity: 1
+        }).addTo(routeMarkers);
+        L.circleMarker(fullLine[fullLine.length - 1], {
+          radius: 7, color: '#226192', weight: 3, fillColor: '#EF8557', fillOpacity: 1
+        }).addTo(routeMarkers);
+      }
+
       map.fitBounds(routeLine.getBounds());
     }
 
